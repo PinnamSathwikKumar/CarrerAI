@@ -26,7 +26,7 @@ class Config:
     USE_AI_CHATBOT = bool(os.environ.get('OPENAI_API_KEY', ''))  # Falls back to keyword logic if not set
 
     # --- Admin ---
-    ADMIN_DEFAULT_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@careerAI.com')
+    ADMIN_DEFAULT_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@careerAI.com').lower()
     ADMIN_DEFAULT_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'Admin@123')
 
     # --- Session ---

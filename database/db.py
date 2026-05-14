@@ -122,15 +122,20 @@ def init_db():
 def seed_admin():
     """Create default admin account if it doesn't exist."""
     from config import Config
+    admin_email = Config.ADMIN_DEFAULT_EMAIL.lower()
     db_path = current_app.config['DATABASE_PATH']
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    cursor.execute('SELECT id FROM admins WHERE email = ?', (Config.ADMIN_DEFAULT_EMAIL,))
+    # Normalize existing admin emails so login is not broken by case-sensitive stored values.
+    cursor.execute('UPDATE admins SET email = ? WHERE LOWER(email) = ?', (admin_email, admin_email))
+    conn.commit()
+
+    cursor.execute('SELECT id FROM admins WHERE email = ?', (admin_email,))
     if not cursor.fetchone():
         cursor.execute(
             'INSERT INTO admins (email, password_hash) VALUES (?, ?)',
-            (Config.ADMIN_DEFAULT_EMAIL, generate_password_hash(Config.ADMIN_DEFAULT_PASSWORD))
+            (admin_email, generate_password_hash(Config.ADMIN_DEFAULT_PASSWORD))
         )
         conn.commit()
     conn.close()

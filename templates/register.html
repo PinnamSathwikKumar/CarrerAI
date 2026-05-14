@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card auth-card-wide">
+        <div class="auth-header">
+            <div class="auth-logo">⚡</div>
+            <h1>Create Account</h1>
+            <p>Start your AI-powered career journey</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.register') }}" class="auth-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Arjun Sharma" required
+                        class="form-input" value="{{ form_data.get('name', '') }}">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@college.edu" required
+                        class="form-input" value="{{ form_data.get('email', '') }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password <span class="label-hint">(min 6 chars)</span></label>
+                <input type="password" id="password" name="password" placeholder="Create a strong password"
+                    required class="form-input" minlength="6">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="college">College / University <span class="label-hint">(optional)</span></label>
+                    <input type="text" id="college" name="college" placeholder="IIT Bombay"
+                        class="form-input" value="{{ form_data.get('college', '') }}">
+                </div>
+                <div class="form-group">
+                    <label for="year">Year of Study</label>
+                    <select id="year" name="year" class="form-input">
+                        <option value="">Select Year</option>
+                        <option value="1st Year" {% if form_data.get('year') == '1st Year' %}selected{% endif %}>1st Year</option>
+                        <option value="2nd Year" {% if form_data.get('year') == '2nd Year' %}selected{% endif %}>2nd Year</option>
+                        <option value="3rd Year" {% if form_data.get('year') == '3rd Year' %}selected{% endif %}>3rd Year</option>
+                        <option value="4th Year" {% if form_data.get('year') == '4th Year' %}selected{% endif %}>4th Year</option>
+                        <option value="Graduate" {% if form_data.get('year') == 'Graduate' %}selected{% endif %}>Graduate</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+                Create Account <span>→</span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login →</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

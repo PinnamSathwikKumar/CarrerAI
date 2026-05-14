@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Manage Tips{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Career <span class="gradient-text">Tips</span></h1>
+        <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">+ Add Tip</button>
+    </div>
+
+    <div class="glass-card">
+        {% if suggestions %}
+        <div class="suggestions-admin-list">
+            {% for s in suggestions %}
+            <div class="suggestion-admin-item">
+                <div class="sug-meta">
+                    <span class="cat-badge cat-{{ s.category }}">{{ s.category }}</span>
+                    <strong>{{ s.title }}</strong>
+                </div>
+                <p class="sug-content">{{ s.content }}</p>
+                <form method="POST" action="{{ url_for('admin.delete_suggestion', sug_id=s.id) }}"
+                    onsubmit="return confirm('Delete this tip?')" style="margin-top:0.5rem">
+                    <button class="btn-sm btn-danger">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="muted">No tips added yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Add Career Tip</h2>
+            <button onclick="document.getElementById('addModal').classList.remove('open')">✕</button>
+        </div>
+        <form method="POST" action="{{ url_for('admin.add_suggestion') }}" class="auth-form">
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category" class="form-input" required>
+                    <option value="resume">Resume</option>
+                    <option value="interview">Interview</option>
+                    <option value="career">Career</option>
+                    <option value="dsa">DSA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" class="form-input" placeholder="Tip title" required>
+            </div>
+            <div class="form-group">
+                <label>Content</label>
+                <textarea name="content" class="form-input" rows="4" placeholder="Detailed tip content..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Add Tip</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+# ============================================================
+# CareerAI — Requirements
+# Optimized for low-RAM machines (i3 laptop / free hosting)
+# Install: pip install -r requirements.txt
+# ============================================================
+
+# ─── Core Framework ────────────────────────────────────────
+Flask==3.0.3
+Werkzeug==3.0.3            # Password hashing, secure filename, request utils
+
+# ─── Environment Variables ─────────────────────────────────
+python-dotenv==1.0.1       # Loads .env file into os.environ
+
+# ─── File Upload & Parsing ─────────────────────────────────
+pdfplumber==0.11.0         # Best PDF text extraction (handles columns/tables)
+PyPDF2==3.0.1              # Fallback PDF parser if pdfplumber unavailable
+python-docx==1.1.2         # DOCX resume parsing
+
+# ─── AI Integration (Optional) ─────────────────────────────
+# Only needed if OPENAI_API_KEY is set in .env
+# Comment out if not using OpenAI
+openai==1.35.3
+
+# ─── Production Server ─────────────────────────────────────
+gunicorn==22.0.0           # WSGI server for Render/Railway/PythonAnywhere
+
+# ─── Utilities ─────────────────────────────────────────────
+Pillow==10.3.0             # Image processing (if needed for avatars/uploads)
+
+# ─── Optional: Better Error Pages in Dev ───────────────────
+# Werkzeug includes debugger by default in debug mode

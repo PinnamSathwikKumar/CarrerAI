@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Edit Resource{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width:700px">
+    <div class="page-header">
+        <h1>Edit <span class="gradient-text">Resource</span></h1>
+        <a href="{{ url_for('admin.resources') }}" class="btn btn-ghost">← Back</a>
+    </div>
+    <div class="glass-card">
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" class="form-input" value="{{ resource.title }}" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-input" rows="4">{{ resource.description or '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>URL</label>
+                <input type="url" name="url" class="form-input" value="{{ resource.url or '' }}">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select name="difficulty" class="form-input">
+                        {% for d in ['beginner', 'intermediate', 'advanced'] %}
+                        <option value="{{ d }}" {% if resource.difficulty == d %}selected{% endif %}>{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Visible</label>
+                    <select name="is_active" class="form-input">
+                        <option value="1" {% if resource.is_active %}selected{% endif %}>Active</option>
+                        <option value="" {% if not resource.is_active %}selected{% endif %}>Hidden</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

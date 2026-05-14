@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% block title %}Resume Results{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h1>Analysis <span class="gradient-text">Results</span></h1>
+            <p class="page-subtitle">{{ analysis.filename }}</p>
+        </div>
+        <a href="{{ url_for('user.resume') }}" class="btn btn-ghost">Upload Another →</a>
+    </div>
+
+    <!-- Main Score Card -->
+    <div class="score-hero glass-card">
+        <div class="score-circle-wrap">
+            <div class="score-circle" data-score="{{ analysis.score }}">
+                <svg viewBox="0 0 120 120">
+                    <circle class="circle-bg" cx="60" cy="60" r="52"/>
+                    <circle class="circle-fill" cx="60" cy="60" r="52"
+                        stroke="{{ analysis.grade.color }}"
+                        stroke-dasharray="{{ (analysis.score / 100) * 327 }} 327"/>
+                </svg>
+                <div class="score-inner">
+                    <div class="score-num">{{ analysis.score }}</div>
+                    <div class="score-max">/100</div>
+                </div>
+            </div>
+        </div>
+        <div class="score-meta">
+            <div class="score-grade" style="color: {{ analysis.grade.color }}">
+                Grade {{ analysis.grade.letter }} — {{ analysis.grade.label }}
+            </div>
+            <div class="score-words">{{ analysis.word_count }} words • PDF/DOCX analyzed</div>
+            <!-- Score breakdown bars -->
+            <div class="score-breakdown">
+                <div class="breakdown-item">
+                    <span>Keywords</span>
+                    <div class="mini-bar"><div class="mini-fill" style="width:{{ (analysis.keyword_score / 40) * 100 }}%"></div></div>
+                    <span class="breakdown-pts">{{ analysis.keyword_score }}/40</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Action Verbs</span>
+                    <div class="mini-bar"><div class="mini-fill" style="width:{{ (analysis.verb_score / 20) * 100 }}%"></div></div>
+                    <span class="breakdown-pts">{{ analysis.verb_score }}/20</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Formatting</span>
+                    <div class="mini-bar"><div class="mini-fill" style="width:{{ (analysis.format_score / 20) * 100 }}%"></div></div>
+                    <span class="breakdown-pts">{{ analysis.format_score }}/20</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Length</span>
+                    <div class="mini-bar"><div class="mini-fill" style="width:{{ (analysis.length_score / 10) * 100 }}%"></div></div>
+                    <span class="breakdown-pts">{{ analysis.length_score }}/10</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Contact</span>
+                    <div class="mini-bar"><div class="mini-fill" style="width:{{ (analysis.contact_score / 10) * 100 }}%"></div></div>
+                    <span class="breakdown-pts">{{ analysis.contact_score }}/10</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-grid">
+        <!-- Skills Found -->
+        <div class="glass-card">
+            <h2 class="card-title">✅ Skills Detected <span class="badge-count">{{ analysis.skills|length }}</span></h2>
+            {% if analysis.skills %}
+            <div class="tag-cloud">
+                {% for skill in analysis.skills %}
+                <span class="skill-tag found">{{ skill }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">No recognized tech keywords found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Missing Keywords -->
+        <div class="glass-card">
+            <h2 class="card-title">⚠️ Missing Keywords <span class="badge-count warn">{{ analysis.missing|length }}</span></h2>
+            {% if analysis.missing %}
+            <div class="tag-cloud">
+                {% for kw in analysis.missing %}
+                <span class="skill-tag missing">{{ kw }}</span>
+                {% endfor %}
+            </div>
+            <p class="hint-text">Add these if relevant to your target role. Tailor to each job description.</p>
+            {% else %}
+            <p class="success-text">✅ Great keyword coverage!</p>
+            {% endif %}
+        </div>
+
+        <!-- Contact Checklist -->
+        <div class="glass-card">
+            <h2 class="card-title">📞 Contact Info Checklist</h2>
+            <div class="checklist">
+                <div class="check-item {{ 'found' if analysis.has_email else 'missing' }}">
+                    <span class="check-icon">{{ '✅' if analysis.has_email else '❌' }}</span>
+                    <span>Email Address</span>
+                </div>
+                <div class="check-item {{ 'found' if analysis.has_phone else 'missing' }}">
+                    <span class="check-icon">{{ '✅' if analysis.has_phone else '❌' }}</span>
+                    <span>Phone Number</span>
+                </div>
+                <div class="check-item {{ 'found' if analysis.has_linkedin else 'missing' }}">
+                    <span class="check-icon">{{ '✅' if analysis.has_linkedin else '❌' }}</span>
+                    <span>LinkedIn Profile</span>
+                </div>
+                <div class="check-item {{ 'found' if analysis.has_github else 'missing' }}">
+                    <span class="check-icon">{{ '✅' if analysis.has_github else '❌' }}</span>
+                    <span>GitHub Profile</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weak Verbs -->
+        {% if analysis.weak_verbs %}
+        <div class="glass-card">
+            <h2 class="card-title">⚡ Weak Verbs Found</h2>
+            <div class="tag-cloud">
+                {% for verb in analysis.weak_verbs %}
+                <span class="skill-tag weak">{{ verb }}</span>
+                {% endfor %}
+            </div>
+            <p class="hint-text">Replace these with: <strong>developed, built, optimized, deployed, architected, engineered</strong></p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Improvement Suggestions -->
+    {% if analysis.suggestions %}
+    <div class="glass-card">
+        <h2 class="card-title">🎯 Improvement Suggestions</h2>
+        <div class="suggestions-list">
+            {% for sug in analysis.suggestions %}
+            <div class="suggestion-item priority-{{ sug.priority }}">
+                <div class="sug-header">
+                    <span class="sug-icon">{{ sug.icon }}</span>
+                    <span class="sug-title">{{ sug.title }}</span>
+                    <span class="priority-badge">{{ sug.priority }}</span>
+                </div>
+                <p class="sug-detail">{{ sug.detail }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Next Steps -->
+    <div class="glass-card next-steps-card">
+        <h2 class="card-title">🚀 Next Steps</h2>
+        <div class="next-steps-grid">
+            <a href="{{ url_for('user.chat') }}" class="next-step-btn">
+                <span>🤖</span>
+                <span>Ask AI for resume advice</span>
+            </a>
+            <a href="{{ url_for('user.dsa_roadmap') }}" class="next-step-btn">
+                <span>🗺️</span>
+                <span>Follow DSA roadmap</span>
+            </a>
+            <a href="{{ url_for('user.resume') }}" class="next-step-btn">
+                <span>📤</span>
+                <span>Upload improved resume</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

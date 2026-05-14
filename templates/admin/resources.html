@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Manage Resources{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1>Manage <span class="gradient-text">Resources</span></h1>
+        <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('open')">+ Add Resource</button>
+    </div>
+
+    <!-- Resources Table -->
+    <div class="glass-card">
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr><th>#</th><th>Category</th><th>Title</th><th>Difficulty</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for r in resources %}
+                    <tr class="{{ '' if r.is_active else 'row-inactive' }}">
+                        <td>{{ r.id }}</td>
+                        <td><span class="cat-badge cat-{{ r.category }}">{{ r.category }}</span></td>
+                        <td><strong>{{ r.title }}</strong><br><small class="muted">{{ r.description[:60] if r.description }}...</small></td>
+                        <td><span class="difficulty-badge {{ r.difficulty }}">{{ r.difficulty }}</span></td>
+                        <td><span class="status-badge {{ 'active' if r.is_active else 'inactive' }}">{{ 'Active' if r.is_active else 'Hidden' }}</span></td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_resource', res_id=r.id) }}" class="btn-sm">Edit</a>
+                            <form method="POST" action="{{ url_for('admin.delete_resource', res_id=r.id) }}" style="display:inline"
+                                onsubmit="return confirm('Delete this resource?')">
+                                <button class="btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Add New Resource</h2>
+            <button onclick="document.getElementById('addModal').classList.remove('open')">✕</button>
+        </div>
+        <form method="POST" action="{{ url_for('admin.add_resource') }}" class="auth-form">
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category" class="form-input" required>
+                    <option value="topic">Topic</option>
+                    <option value="youtube">YouTube Channel</option>
+                    <option value="platform">Platform</option>
+                    <option value="book">Book</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" class="form-input" placeholder="Resource title" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" class="form-input" rows="3" placeholder="Brief description..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>URL</label>
+                <input type="url" name="url" class="form-input" placeholder="https://...">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select name="difficulty" class="form-input">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate" selected>Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Order Index</label>
+                    <input type="number" name="order_index" class="form-input" value="0" min="0">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Add Resource</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

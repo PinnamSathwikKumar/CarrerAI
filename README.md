@@ -93,7 +93,7 @@ career_ai/
 ### 1. Clone & Setup
 
 ```bash
-git clone https://github.com/yourusername/career-ai.git
+git clone https://github.com/PinnamSathwikKumar/CarrerAI.git
 cd career_ai
 
 # Create virtual environment
@@ -180,86 +180,6 @@ OPENAI_API_KEY=sk-your-key-here
 
 ---
 
-## 🌐 Deployment
-
-### Option 1: Render (Recommended — Free Tier)
-
-1. Push code to GitHub
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect GitHub repo
-4. Settings:
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn app:app`
-   - **Instance:** Free
-5. Add environment variables under **Environment** tab:
-   ```
-   SECRET_KEY = <generate a strong key>
-   ADMIN_EMAIL = your-admin@email.com
-   ADMIN_PASSWORD = StrongPassword123
-   OPENAI_API_KEY = (optional)
-   ```
-6. Deploy → your app is live!
-
-> **Note:** Render free tier spins down after 15 minutes of inactivity. First request after sleep takes ~30 seconds.
-
----
-
-### Option 2: Railway
-
-1. Install Railway CLI: `npm i -g @railway/cli`
-2. ```bash
-   railway login
-   railway init
-   railway up
-   ```
-3. Set env vars:
-   ```bash
-   railway variables set SECRET_KEY=your-key
-   railway variables set ADMIN_PASSWORD=StrongPass
-   ```
-4. Railway auto-detects `Procfile` and deploys.
-
-> Railway gives $5 free credit/month which covers low-traffic apps.
-
----
-
-### Option 3: PythonAnywhere (Free Tier)
-
-1. Create account at [pythonanywhere.com](https://www.pythonanywhere.com)
-2. Open a **Bash console** and:
-   ```bash
-   git clone https://github.com/yourusername/career-ai.git
-   cd career_ai
-   pip3 install --user -r requirements.txt
-   ```
-3. Go to **Web** tab → Add a new web app → Manual configuration → Python 3.11
-4. Set **Source code:** `/home/yourusername/career_ai`
-5. Edit the WSGI config file:
-   ```python
-   import sys
-   sys.path.insert(0, '/home/yourusername/career_ai')
-   from app import app as application
-   ```
-6. In **Web** → **Environment variables**: add your `.env` values
-7. Hit **Reload**
-
-> PythonAnywhere free tier: 1 web app, limited CPU seconds/day — perfect for personal projects.
-
----
-
-### Option 4: Local Network (i3 Laptop / LAN)
-
-Run the app accessible on your local network:
-
-```bash
-python app.py
-# or
-flask run --host=0.0.0.0 --port=5000
-```
-
-Access from other devices: `http://<your-ip>:5000`
-
----
 
 ## 🗄️ Database Tables
 
@@ -288,7 +208,7 @@ chat_history   -- Per-user chat messages
 
 ---
 
-## ⚡ Performance (Low-RAM Optimizations)
+## ⚡ Performance 
 
 - SQLite — zero-config, no separate server process
 - No heavy ORM (raw `sqlite3` module)
@@ -310,7 +230,6 @@ chat_history   -- Per-user chat messages
 | AI           | Keyword engine + OpenAI GPT-3.5 (optional) |
 | Frontend     | Vanilla HTML, CSS, JavaScript              |
 | Fonts        | Space Grotesk + JetBrains Mono             |
-| Deployment   | Gunicorn + Render/Railway/PythonAnywhere   |
 
 ---
 
@@ -360,4 +279,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-_Built with ❤️ for CSE students aiming for their dream jobs._
+_Built with ❤️ for students aiming for their dream jobs._
